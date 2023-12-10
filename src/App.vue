@@ -4,6 +4,21 @@
       <h1>Floors {{ floorCount }}</h1>
       <button @click="modifyFloorCount()">Insert Floor</button>
       <button @click="modifyFloorCount(false)">Remove Floor</button>
+      <div
+        style="display: grid; grid-template-columns: repeat(3, 1fr); justify-content: space-between; gap: 0.5em; margin: 1em 0;">
+        <div style="display: flex; align-items: center; justify-content: start; gap: 1em;">
+          <label for="">Lift 1</label>
+          <input v-model="startLift1" type="checkbox" name="" id="">
+        </div>
+        <div style="display: flex; align-items: center; justify-content: start;gap: 1em;">
+          <label for="">Lift</label>
+          <input v-model="startLift2" type="checkbox" name="" id="">
+        </div>
+        <div style="display: flex; align-items: center; justify-content: start;gap: 1em;">
+          <label for="">Jump Lift</label>
+          <input v-model="startJumpLift" type="checkbox" name="" id="">
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -18,7 +33,9 @@ import { onMounted, ref, watch } from 'vue';
 const floorCount = ref<number>(0)
 const floorsList = ref<THREE.Mesh[]>([])
 const AddonsSegments = ref<THREE.Mesh[]>([])
-
+const startLift1 = ref<boolean>(false);
+const startLift2 = ref<boolean>(false);
+const startJumpLift = ref<boolean>(false);
 
 const clock = new THREE.Clock();
 const scene = new THREE.Scene();
@@ -245,20 +262,18 @@ onMounted(() => {
   (document.getElementById('canvas') as HTMLElement).appendChild(renderer.domElement);
 
 
-  let second_lift_started: boolean = false;
   function animate() {
     const elapsedTime = clock.getElapsedTime()
 
     if (floorCount.value > 3) {
-      lift.position.y = ((floorCount.value * Math.sin(elapsedTime)) / 2) + floorCount.value / 2 + 0.5;
-      if (lift.position.y >= floorCount.value / 2) {
-        second_lift_started = true;
-      }
+      if (startLift1.value == true)
+        lift.position.y = ((floorCount.value * Math.sin(elapsedTime)) / 2) + floorCount.value / 2 + 0.5;
 
-      if (second_lift_started)
+      if (startLift2.value == true)
         lift1.position.y = ((floorCount.value * Math.cos(elapsedTime)) / 2) + floorCount.value / 2 + 0.5;
 
-      jumplift.position.y = ((floorCount.value * Math.cos(elapsedTime)) / 2) + floorCount.value / 2 + 0.5;
+      if (startJumpLift.value == true)
+        jumplift.position.y = ((floorCount.value * Math.cos(elapsedTime)) / 2) + floorCount.value / 2 + 0.5;
     }
 
     controls.update();
