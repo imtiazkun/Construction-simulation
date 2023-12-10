@@ -20,7 +20,7 @@ const floorsList = ref<THREE.Mesh[]>([])
 const AddonsSegments = ref<THREE.Mesh[]>([])
 
 
-// const clock = new THREE.Clock();
+const clock = new THREE.Clock();
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
@@ -243,7 +243,24 @@ watch(floorCount, (newVal: any, oldVal: any) => {
 onMounted(() => {
   camera.position.z = 15;
   (document.getElementById('canvas') as HTMLElement).appendChild(renderer.domElement);
+
+
+  let second_lift_started: boolean = false;
   function animate() {
+    const elapsedTime = clock.getElapsedTime()
+
+    if (floorCount.value > 3) {
+      lift.position.y = ((floorCount.value * Math.sin(elapsedTime)) / 2) + floorCount.value / 2 + 0.5;
+      if (lift.position.y >= floorCount.value / 2) {
+        second_lift_started = true;
+      }
+
+      if (second_lift_started)
+        lift1.position.y = ((floorCount.value * Math.cos(elapsedTime)) / 2) + floorCount.value / 2 + 0.5;
+
+      jumplift.position.y = ((floorCount.value * Math.cos(elapsedTime)) / 2) + floorCount.value / 2 + 0.5;
+    }
+
     controls.update();
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
