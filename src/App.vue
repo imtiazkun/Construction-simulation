@@ -20,7 +20,7 @@ const floorsList = ref<THREE.Mesh[]>([])
 const AddonsSegments = ref<THREE.Mesh[]>([])
 
 
-const clock = new THREE.Clock();
+// const clock = new THREE.Clock();
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
